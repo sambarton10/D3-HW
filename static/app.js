@@ -72,7 +72,7 @@ function updateToolTip(firstxAxis, circlesGroup) {
   
     var toolTip = d3.tip()
       .attr("class", "d3-tip")
-      .offset([90, -60])
+      .offset([80, -60])
       .html(function(d) {
         return (`${d.state}<br>${label} ${d[firstxAxis]}<br> Obesity: ${d.obesity}`);
       });
@@ -80,15 +80,15 @@ function updateToolTip(firstxAxis, circlesGroup) {
     circlesGroup.call(toolTip);
   
     circlesGroup.on("mouseover", function(data) {
-    toolTip.style("display", "block")
-      toolTip.show(data);
+    //toolTip.style("display", "block")
+        toolTip.show(data);
     })
       // onmouseout event
         .on("mouseout", function(data, index) {
             toolTip.hide(data);
         });
   
-    ;
+        return circlesGroup;
 }
 d3.csv("static/data.csv").then(function(demographicData, err) {
     if (err) throw err;
@@ -126,9 +126,9 @@ d3.csv("static/data.csv").then(function(demographicData, err) {
     .append("circle")
     .attr("cx", d => xLinearScale(d[firstxAxis]))
     .attr("cy", d => yLinearScale(d.obesity))
-    .attr("r", 20)
+    .attr("r", 5)
     .attr("fill", "pink")
-    .attr("opacity", ".5");
+    //.attr("opacity", ".5");
 
 var labelsGroup = chartGroup.append("g")
     .attr("transform", `translate(${width / 2}, ${height + 20})`);
