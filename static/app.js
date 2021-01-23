@@ -70,16 +70,17 @@ function updateToolTip(firstxAxis, circlesGroup) {
       label = "Obesity:";
     }
   
-    var toolTip = d3.tip("div")
+    var toolTip = d3.tip()
       .attr("class", "d3-tip")
       .offset([90, -60])
       .html(function(d) {
-        return (`${d.state}<br>${label} ${d[firstxAxis]}`);
+        return (`${d.state}<br>${label} ${d[firstxAxis]}<br> Obesity: ${d.obesity}`);
       });
   
     circlesGroup.call(toolTip);
   
     circlesGroup.on("mouseover", function(data) {
+    toolTip.style("display", "block")
       toolTip.show(data);
     })
       // onmouseout event
@@ -128,22 +129,23 @@ d3.csv("static/data.csv").then(function(demographicData, err) {
     .attr("r", 20)
     .attr("fill", "pink")
     .attr("opacity", ".5");
-    var labelsGroup = chartGroup.append("g")
+
+var labelsGroup = chartGroup.append("g")
     .attr("transform", `translate(${width / 2}, ${height + 20})`);
 
-  var obesityLabel = labelsGroup.append("text")
+  var povertyLabel = labelsGroup.append("text")
     .attr("x", 0)
     .attr("y", 20)
     .attr("value", "poverty") // value to grab for event listener
     .classed("active", true)
-    .text("Poverty");
+    .text("% in Poverty");
 
-  var albumsLabel = labelsGroup.append("text")
+  var incomeLabel = labelsGroup.append("text")
     .attr("x", 0)
     .attr("y", 40)
-    .attr("value", "obesity") // value to grab for event listener
+    .attr("value", "income") // value to grab for event listener
     .classed("inactive", true)
-    .text("# of Albums Released");
+    .text("Income");
 
   // append y axis
   chartGroup.append("text")
@@ -152,7 +154,7 @@ d3.csv("static/data.csv").then(function(demographicData, err) {
     .attr("x", 0 - (height / 2))
     .attr("dy", "1em")
     .classed("axis-text", true)
-    .text("Obesity");
+    .text("% Obese");
 
   // updateToolTip function above csv import
   var circlesGroup = updateToolTip(firstxAxis, circlesGroup);
@@ -171,7 +173,7 @@ d3.csv("static/data.csv").then(function(demographicData, err) {
 
         // functions here found above csv import
         // updates x scale for new data
-        xLinearScale = xScale(hairData, firstxAxis);
+        xLinearScale = xScale(demographicData, firstxAxis);
 
         // updates x axis with transition
         xAxis = renderAxes(xLinearScale, xAxis);
@@ -183,19 +185,19 @@ d3.csv("static/data.csv").then(function(demographicData, err) {
         circlesGroup = updateToolTip(firstxAxis, circlesGroup);
 
         // changes classes to change bold text
-        if (chosenXAxis === "obesity") {
-          albumsLabel
+        if (firstxAxis === "income") {
+          incomeLabel
             .classed("active", true)
             .classed("inactive", false);
-          obesityLabel
+          povertyLabel
             .classed("active", false)
             .classed("inactive", true);
         }
         else {
-          albumsLabel
+          incomeLabel
             .classed("active", false)
             .classed("inactive", true);
-          hairLengthLabel
+          povertyLabel
             .classed("active", true)
             .classed("inactive", false);
         }
